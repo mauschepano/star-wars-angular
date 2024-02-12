@@ -7,7 +7,7 @@ import { PeopleStartComponent } from './star-wars/people/people-start/people-sta
 import { PeopleListComponent } from './star-wars/people/people-list/people-list.component'
 import { PeopleDetailComponent } from './star-wars/people/people-detail/people-detail.component'
 import { HttpClientModule } from "@angular/common/http"
-import { FormsModule } from "@angular/forms"
+import { FormsModule, ReactiveFormsModule } from "@angular/forms"
 import { HeaderComponent } from './header/header.component'
 import { LoaderComponent } from './loader/loader.component';
 import { PlanetListComponent } from './star-wars/planet/planet-list/planet-list.component';
@@ -39,7 +39,7 @@ import { StarshipComponent } from './star-wars/starship/starship.component'
     StarshipComponent
   ],
   imports: [
-    BrowserModule, FormsModule, HttpClientModule, AppRoutingModule
+    BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
