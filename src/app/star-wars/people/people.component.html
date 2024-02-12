@@ -8,11 +8,13 @@
             class="form-control"
             placeholder="People-Search"
             ngModel
+            required
             name="search">
       </div>
       <button
+          [disabled]="f.invalid"
           type="submit"
-          class="btn btn-default"
+          class="btn btn-primary"
           style="margin-left: 10px">Submit</button>
     </form>
   </div>
