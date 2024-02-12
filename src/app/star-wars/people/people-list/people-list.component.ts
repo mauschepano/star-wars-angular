@@ -20,6 +20,7 @@ export class PeopleListComponent {
   }
 
   initPeopleList () {
+    // this.peopleList$ = this.starWarsService.getSubscription()
     this.starWarsService
       .getListFromApi(StarWarsTopic.People)
       .subscribe((peopleList) => {

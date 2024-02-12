@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
-import { catchError, Observable, Subject, throwError } from 'rxjs'
+import { catchError, Observable, Subject, Subscription, throwError } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { TopicItemInterface } from "../star-wars/topic-item.interface"
@@ -19,7 +19,7 @@ export enum StarWarsTopic {
 })
 export class StarWarsService {
   topicList: TopicItemInterface[];
-  listChanged = new Subject<TopicItemInterface[]>();
+  loader$: boolean = false
 
   private baseUrls = {
     tech: 'https://www.swapi.tech/api',
@@ -28,7 +28,29 @@ export class StarWarsService {
 
   constructor(private http: HttpClient) {}
 
+  getSubscription() {
+    this.getListFromApi(StarWarsTopic.People)
+      .subscribe({
+        next: (resultList: TopicItemInterface[]) => {
+          this.loader$ = false
+          this.topicList = resultList
+          console.log('next')
+          return this.topicList
+
+        },
+        error: (error) => {
+          alert('Oops, something went wrong!')
+          console.error(error)
+        },
+        complete: () => {
+          console.log('complete')
+          return this.topicList
+        }
+    })
+  }
+
   getListFromApi(topic: StarWarsTopic): Observable<TopicItemInterface[]> {
+    this.loader$ = true
     return this.http
       .get<TopicItemInterface[]>(`${this.baseUrls.tech}${topic}`)
       .pipe(
