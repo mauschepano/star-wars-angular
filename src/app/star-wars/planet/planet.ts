@@ -1,4 +1,4 @@
-export interface PlanetInterface {
+export interface Planet{
   name: string,
   population: string,
   climate: string,
@@ -12,4 +12,7 @@ export interface PlanetInterface {
   created?: string,
   edited?: string,
   url?: string
+  type: PlanetType
 }
+
+export type PlanetType = 'M' | 'N' | 'D';

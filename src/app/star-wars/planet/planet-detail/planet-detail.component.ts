@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StarWarsService, StarWarsTopic } from "../../../services/star-wars.service";
 import { ActivatedRoute, Params } from "@angular/router";
-import { PlanetInterface } from "../planet-interface";
-import { PeopleInterface } from "../../people/people.interface";
+import { Planet } from "../planet";
 
 @Component({
   selector: 'app-planet-detail',
@@ -11,7 +10,7 @@ import { PeopleInterface } from "../../people/people.interface";
 })
 export class PlanetDetailComponent implements OnInit {
   id: string
-  planet: PlanetInterface
+  planet: Planet;
   loading = true
 
   constructor (
@@ -26,8 +25,7 @@ export class PlanetDetailComponent implements OnInit {
         this.id = params['id']
         this.starWarsService
           .getListItem(StarWarsTopic.Planets, this.id)
-          .subscribe((planet) => {
-            this.planet = <PlanetInterface>planet
+          .subscribe(() => {
             this.loading = false
           })
       })

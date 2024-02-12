@@ -1,26 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { StarWarsService, StarWarsTopic } from "../../../services/star-wars.service";
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TopicItemInterface } from "../../topic-item.interface";
 
 @Component({
   selector: 'app-planet-list',
   templateUrl: './planet-list.component.html',
-  styleUrls: ['./planet-list.component.scss']
+  styleUrls: ['./planet-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush // wird nächstes Mal behandelt
 })
-export class PlanetListComponent implements OnInit {
-  planetList: TopicItemInterface[]
+export class PlanetListComponent {
+  @Input() planetList: TopicItemInterface[] | null;
 
-  constructor( private starWarsService: StarWarsService) { }
-
-  ngOnInit() {
-    this.initPlanetList()
-  }
-
-  initPlanetList() {
-    this.starWarsService
-      .getListFromApi(StarWarsTopic.Planets)
-      .subscribe((planetList) => {
-        this.planetList = planetList
-      })
-  }
+  constructor() { }
 }
