@@ -43,8 +43,7 @@ export class StarWarsService {
         console.log(topic);
         this.loadListItems(topic)
       }))
-      .subscribe()
-
+      .subscribe();
   }
 
   get planets$(): Observable<TopicItemInterface[]> {
