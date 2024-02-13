@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-4"><h3>Planets</h3></div>
+  <div class="col-xs-8">
+    <form class="navbar-form navbar-right" role="search" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <input
+            type="text"
+            class="form-control"
+            placeholder="Planet-Search"
+            formControlName="search">
+      </div>
+      <button
+          [disabled]="searchForm.invalid"
+          type="submit"
+          class="btn btn-primary"
+          style="margin-left: 10px">Submit</button>
+    </form>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-5">
+    <div class="list-group">
+      <app-main-list [itemList]="items$ | async"></app-main-list>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <router-outlet></router-outlet>
+  </div>
+</div>
