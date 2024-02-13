@@ -16,6 +16,7 @@ import { ActivatedRoute, Params } from "@angular/router";
 export class MainComponent implements OnInit {
   searchForm: FormGroup;
   items$: Observable<TopicItemInterface[]> = this.starWarsService.listItems$;
+  headline$: Observable<string> = this.starWarsService.headLine$;
 
   constructor (private starWarsService: StarWarsService, private route: ActivatedRoute) {}
   ngOnInit() {

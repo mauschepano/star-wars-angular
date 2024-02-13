@@ -35,6 +35,7 @@ export class StarWarsService {
     tech: 'https://www.swapi.tech/api',
     dev: 'https://www.swapi.dev/api'
   }
+  private _headline$ = new BehaviorSubject<StarWarsTopic1>(StarWarsTopic1.People)
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
     console.log('serv con')
@@ -46,8 +47,8 @@ export class StarWarsService {
       .subscribe();
   }
 
-  get planets$(): Observable<TopicItemInterface[]> {
-    return this._planets$.asObservable();
+  get headLine$(): Observable<StarWarsTopic1> {
+    return this._headline$.asObservable();
   }
 
   get activeTopic$(): Observable<StarWarsTopic1> {
@@ -122,7 +123,8 @@ export class StarWarsService {
 
   public loadItemsByRoute(topic: StarWarsTopic1): Observable<TopicItemInterface[]> {
     return this.loadListItems(topic).pipe(
-        tap((items) => this._listItems$.next(items))
+        tap((items) => this._listItems$.next(items)),
+        tap((items) => this._headline$.next(topic))
     );
   }
 }
