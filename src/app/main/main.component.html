@@ -1,18 +1,16 @@
 <div class="row">
-  <div class="col-xs-4"><h3>People</h3></div>
+  <div class="col-xs-4"><h3>Planets</h3></div>
   <div class="col-xs-8">
-    <form class="navbar-form navbar-right" role="search" (ngSubmit)="onSubmit()" #f="ngForm">
+    <form class="navbar-form navbar-right" role="search" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <input
             type="text"
             class="form-control"
-            placeholder="People-Search"
-            ngModel
-            required
-            name="search">
+            placeholder="PlanetInterface-Search"
+            formControlName="search">
       </div>
       <button
-          [disabled]="f.invalid"
+          [disabled]="searchForm.invalid"
           type="submit"
           class="btn btn-primary"
           style="margin-left: 10px">Submit</button>
@@ -20,10 +18,10 @@
   </div>
 </div>
 <hr>
-<div class="row" >
+<div class="row">
   <div class="col-md-5">
     <div class="list-group">
-      <app-people-list></app-people-list>
+      <app-main-list [itemList]="items$ | async"></app-main-list>
     </div>
   </div>
   <div class="col-md-7">

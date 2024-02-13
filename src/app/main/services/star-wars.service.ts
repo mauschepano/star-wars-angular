@@ -3,11 +3,11 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { BehaviorSubject, catchError, Observable, switchMap, tap, throwError } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-import { TopicItemInterface } from "../star-wars/topic-item.interface"
-import { People } from "../star-wars/people/people"
-import { Planet } from "../star-wars/planet/planet";
-import { Starship } from "../star-wars/starship/starship";
+import { TopicItemInterface } from "../../models/topic-item.interface"
+import { PlanetInterface } from "../../models/planet.interface";
 import { ActivatedRoute, Params } from "@angular/router";
+import { StarshipInterface } from '../../models/starship.interface';
+import { PeopleInterface } from '../../models/people.interface';
 
 export enum StarWarsTopic {
   People = '/people',
@@ -72,13 +72,9 @@ export class StarWarsService {
       )
   }
 
-  updateTopic(topic: StarWarsTopic1): void {
-    this._activeTopic$.next(topic)
-  }
-
-  getListItem(topic: StarWarsTopic, id: string): Observable<People|Planet|Starship> {
+  getListItem(topic: StarWarsTopic, id: string): Observable<PeopleInterface|PlanetInterface|StarshipInterface> {
     return this.http
-      .get<People|Planet|Starship>(`${this.baseUrls.tech}${topic}/${id}`)
+      .get<PeopleInterface|PlanetInterface|StarshipInterface>(`${this.baseUrls.tech}${topic}/${id}`)
       .pipe(
         map((data: any) => {
             return data.result.properties
@@ -90,10 +86,10 @@ export class StarWarsService {
   getSearchedItem(
     topic: StarWarsTopic,
     value: string
-  ): Observable<People[]|Planet[]|Starship[]> {
+  ): Observable<PeopleInterface[]|PlanetInterface[]|StarshipInterface[]> {
     console.log(`${this.baseUrls.dev}${topic}/?search=${value}`)
     return this.http
-      .get<People[]|Planet[]|Starship[]>(`${this.baseUrls.dev}${topic}/?search=${value}`)
+      .get<PeopleInterface[]|PlanetInterface[]|StarshipInterface[]>(`${this.baseUrls.dev}${topic}/?search=${value}`)
       .pipe(
         map((data: any) => {
             return data.results
@@ -125,12 +121,9 @@ export class StarWarsService {
     )
   }
 
-  public loadItemsByRoute(): Observable<TopicItemInterface[]> {
-    return this.route.params
-      .pipe(
-        tap((params) => console.log(params)),
-        switchMap((params: Params) => this.loadListItems(params['topic'])),
+  public loadItemsByRoute(topic: StarWarsTopic1): Observable<TopicItemInterface[]> {
+    return this.loadListItems(topic).pipe(
         tap((items) => this._listItems$.next(items))
-      )
+    );
   }
 }

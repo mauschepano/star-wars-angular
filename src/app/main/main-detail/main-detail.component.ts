@@ -2,15 +2,15 @@ import { Component } from '@angular/core'
 import { ActivatedRoute, Params } from "@angular/router"
 import { HttpClient } from "@angular/common/http"
 
-import { StarWarsService, StarWarsTopic } from "../../../services/star-wars.service"
-import { PeopleInterface } from '../people.interface'
+import { StarWarsService, StarWarsTopic } from "../services/star-wars.service"
+import { PeopleInterface } from "../../models/people.interface";
 
 @Component({
-  selector: 'app-people-detail',
-  templateUrl: './people-detail.component.html',
-  styleUrls: ['./people-detail.component.scss']
+  selector:    'app-people-detail',
+  templateUrl: './main-detail.component.html',
+  styleUrls:   ['./main-detail.component.scss']
 })
-export class PeopleDetailComponent {
+export class MainDetailComponent {
   people: PeopleInterface
   id: string
   loading = true
@@ -25,7 +25,7 @@ export class PeopleDetailComponent {
             this.id = params['id']
             this.starWarsService.getListItem(StarWarsTopic.People, this.id)
               .subscribe((people) => {
-                this.people = <PeopleInterface>people
+                this.people = people as PeopleInterface
                 this.loading = false
               });
           }

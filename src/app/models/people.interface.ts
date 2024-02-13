@@ -1,4 +1,4 @@
-export interface PeopleInterface {
+export interface PeopleInterface{
     name: string,
     gender: string,
     birth_year: string,
