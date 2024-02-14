@@ -1,41 +1,48 @@
-<app-loader *ngIf="loading"></app-loader>
-<ng-container *ngIf="!loading">
+<!--<app-loader *ngIf="loading"></app-loader>-->
+<ng-container *ngIf="item !== null; else initState">
   <div class="row">
     <div class="col-xs-14">
-      <h3>{{ people.name }}</h3>
+      <h3>{{ item.name }}</h3>
     </div>
     <div class="col-xs-14">
       <h5>Properties</h5>
-      <div class="row">
-        <div class="col-xs-4">Gender: </div>
-        <div class="col-xs-8">{{ people.gender }}</div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">Birthyear: </div>
-        <div class="col-xs-8">{{ people.birth_year }}</div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">Height: </div>
-        <div class="col-xs-8">{{ people.height }}</div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">Mass: </div>
-        <div class="col-xs-8">{{ people.mass }}</div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">Hair Color: </div>
-        <div class="col-xs-8">{{ people.hair_color }}</div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">Skin Color: </div>
-        <div class="col-xs-8">{{ people.skin_color }}</div>
-      </div>
-      <div class="row">
-        <div class="col-xs-4">Eye Color: </div>
-        <div class="col-xs-8">{{ people.eye_color }}</div>
-      </div>
-
-
+<!--      <ng-template *ngIf="false">-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Gender: </div>-->
+<!--          <div class="col-xs-8">{{ item.gender }}</div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Birthyear: </div>-->
+<!--          <div class="col-xs-8">{{ item.birth_year }}</div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Height: </div>-->
+<!--          <div class="col-xs-8">{{ item.height }}</div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Mass: </div>-->
+<!--          <div class="col-xs-8">{{ item.mass }}</div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Hair Color: </div>-->
+<!--          <div class="col-xs-8">{{ item.hair_color }}</div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Skin Color: </div>-->
+<!--          <div class="col-xs-8">{{ item.skin_color }}</div>-->
+<!--        </div>-->
+<!--        <div class="row">-->
+<!--          <div class="col-xs-4">Eye Color: </div>-->
+<!--          <div class="col-xs-8">{{ item.eye_color }}</div>-->
+<!--        </div>-->
+<!--      </ng-template>-->
     </div>
   </div>
 </ng-container>
+<ng-template #initState>
+  <div class="row">
+    <div class="col-xs-14">
+      <h3>Please select an item! 🧑‍🚀 🪐 🚀 </h3>
+    </div>
+  </div>
+</ng-template>

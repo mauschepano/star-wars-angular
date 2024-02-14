@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
-import { BehaviorSubject, catchError, Observable, switchMap, tap, throwError } from 'rxjs'
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs'
 import { map } from 'rxjs/operators'
 
-import { TopicItemInterface } from "../../models/topic-item.interface"
-import { PlanetInterface } from "../../models/planet.interface";
-import { ActivatedRoute, Params } from "@angular/router";
-import { StarshipInterface } from '../../models/starship.interface';
-import { PeopleInterface } from '../../models/people.interface';
+import { TopicItem } from "../../models/topic-item.interface"
+import { Planet } from "../../models/planet.interface";
+import { Starship } from '../../models/starship.interface';
+import { People } from '../../models/people.interface';
 
 export enum StarWarsTopic {
   People = '/people',
@@ -25,11 +24,11 @@ export enum StarWarsTopic1 {
   providedIn: 'root'
 })
 export class StarWarsService {
-  topicList: TopicItemInterface[]
+  topicList: TopicItem[]
   loader$: boolean = false
 
-  private _planets$ = new BehaviorSubject<TopicItemInterface[]>([])
-  private _listItems$ = new BehaviorSubject<TopicItemInterface[]>([])
+  private _listItems$ = new BehaviorSubject<TopicItem[]>([])
+  private _item$ = new BehaviorSubject<People|Planet|Starship|TopicItem|null>(null)
   private _activeTopic$ = new BehaviorSubject<StarWarsTopic1>(StarWarsTopic1.People)
   private baseUrls = {
     tech: 'https://www.swapi.tech/api',
@@ -37,11 +36,9 @@ export class StarWarsService {
   }
   private _headline$ = new BehaviorSubject<StarWarsTopic1>(StarWarsTopic1.People)
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
-    console.log('serv con')
+  constructor(private http: HttpClient) {
     this.activeTopic$
       .pipe(tap((topic: StarWarsTopic1) => {
-        console.log(topic);
         this.loadListItems(topic)
       }))
       .subscribe();
@@ -56,14 +53,18 @@ export class StarWarsService {
     return this._activeTopic$.asObservable();
   }
 
-  get listItems$(): Observable<TopicItemInterface[]> {
+  get listItems$(): Observable<TopicItem[]> {
     return this._listItems$.asObservable();
   }
 
-  getListFromApi(topic: StarWarsTopic): Observable<TopicItemInterface[]> {
+  get item$(): Observable<People|Planet|Starship|TopicItem|null>{
+    return this._item$.asObservable();
+  }
+
+  getListFromApi(topic: StarWarsTopic): Observable<TopicItem[]> {
     this.loader$ = true
     return this.http
-      .get<TopicItemInterface[]>(`${this.baseUrls.tech}${topic}`)
+      .get<TopicItem[]>(`${this.baseUrls.tech}${topic}`)
       .pipe(
         map((data: any) => {
             return data.results
@@ -72,24 +73,13 @@ export class StarWarsService {
       )
   }
 
-  getListItem(topic: StarWarsTopic, id: string): Observable<PeopleInterface|PlanetInterface|StarshipInterface> {
-    return this.http
-      .get<PeopleInterface|PlanetInterface|StarshipInterface>(`${this.baseUrls.tech}${topic}/${id}`)
-      .pipe(
-        map((data: any) => {
-            return data.result.properties
-          }
-        )
-      );
-  }
-
   getSearchedItem(
     topic: StarWarsTopic,
     value: string
-  ): Observable<PeopleInterface[]|PlanetInterface[]|StarshipInterface[]> {
+  ): Observable<People[]|Planet[]|Starship[]> {
     console.log(`${this.baseUrls.dev}${topic}/?search=${value}`)
     return this.http
-      .get<PeopleInterface[]|PlanetInterface[]|StarshipInterface[]>(`${this.baseUrls.dev}${topic}/?search=${value}`)
+      .get<People[]|Planet[]|Starship[]>(`${this.baseUrls.dev}${topic}/?search=${value}`)
       .pipe(
         map((data: any) => {
             return data.results
@@ -97,6 +87,28 @@ export class StarWarsService {
         ),
         catchError(this.handleError)
       );
+  }
+
+  public loadListItem(item: TopicItem): Observable<People|Planet|Starship|TopicItem> {
+    if (item.hasOwnProperty('url')) {
+      return this.http
+        .get<People|Planet|Starship>(item.url!)
+        .pipe(
+          map((data: any) => {
+              return data.result.properties
+            }
+          )
+        );
+    }
+
+    return new BehaviorSubject(item);
+  }
+
+  public loadItemsByRoute(topic: StarWarsTopic1): Observable<TopicItem[]> {
+    return this.loadListItems(topic).pipe(
+        tap((items) => this._listItems$.next(items)),
+        tap((items) => this._headline$.next(topic))
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -112,19 +124,5 @@ export class StarWarsService {
 
   private loadListItems(topic: StarWarsTopic1){
     return this.getListFromApi(`/${topic}` as StarWarsTopic)
-  }
-
-  public loadPlanetValues(){
-    return this.getListFromApi(StarWarsTopic.Planets).pipe(tap((planets: TopicItemInterface[]) => {
-        this._planets$.next(planets);
-      })
-    )
-  }
-
-  public loadItemsByRoute(topic: StarWarsTopic1): Observable<TopicItemInterface[]> {
-    return this.loadListItems(topic).pipe(
-        tap((items) => this._listItems$.next(items)),
-        tap((items) => this._headline$.next(topic))
-    );
   }
 }

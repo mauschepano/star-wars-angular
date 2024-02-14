@@ -1,34 +1,21 @@
-import { Component } from '@angular/core'
-import { ActivatedRoute, Params } from "@angular/router"
-import { HttpClient } from "@angular/common/http"
+import { Component, Input } from '@angular/core'
 
-import { StarWarsService, StarWarsTopic } from "../services/star-wars.service"
-import { PeopleInterface } from "../../models/people.interface";
+import { People } from "../../models/people.interface";
+import { Planet } from "../../models/planet.interface";
+import { Starship } from "../../models/starship.interface";
+import { TopicItem } from "../../models/topic-item.interface";
 
 @Component({
-  selector:    'app-people-detail',
+  selector:    'app-main-detail',
   templateUrl: './main-detail.component.html',
   styleUrls:   ['./main-detail.component.scss']
 })
 export class MainDetailComponent {
-  people: PeopleInterface
-  id: string
-  loading = true
+  @Input() item: People | Planet | Starship | TopicItem | null
 
-  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute, private http: HttpClient) {}
+  constructor() {}
 
   ngOnInit() {
-    this.route.params
-      .subscribe(
-          (params: Params) => {
-            this.loading = true
-            this.id = params['id']
-            this.starWarsService.getListItem(StarWarsTopic.People, this.id)
-              .subscribe((people) => {
-                this.people = people as PeopleInterface
-                this.loading = false
-              });
-          }
-      )
+    console.log(this.item);
   }
 }

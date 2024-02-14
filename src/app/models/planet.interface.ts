@@ -1,4 +1,4 @@
-export interface PlanetInterface{
+export interface Planet {
   name: string,
   population: string,
   climate: string,

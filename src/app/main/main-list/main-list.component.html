@@ -16,18 +16,18 @@
 <!--    </div>-->
 <!--</div>-->
 <div class="list-group" >
-    <ng-container *ngFor="let people of itemList">
+    <ng-container *ngFor="let item of itemList">
         <div
-            class="list-group-item list-group-item-action"
+            class="mpp-list-item list-group-item list-group-item-action"
             style="cursor:pointer;"
             routerLinkActive="active"
-            *ngIf="people.hasOwnProperty('uid'); else disabledItem"
-            [routerLink]="[people.uid]"
+            (click)="selectItem(item)"
+            *ngIf="item.hasOwnProperty('uid'); else disabledItem"
         >
-            {{ people.name }}
+            {{ item.name }}
         </div>
         <ng-template #disabledItem>
-            <div class="list-group-item list-group-item-action disabled">{{ people.name }}</div>
+            <div class="list-group-item list-group-item-action disabled">{{ item.name }}</div>
         </ng-template>
     </ng-container>
 </div>

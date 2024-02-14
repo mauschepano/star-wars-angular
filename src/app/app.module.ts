@@ -9,6 +9,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { MainComponent } from './main/main.component';
 import { MainListComponent } from './main/main-list/main-list.component';
 import { CapitalizePipe } from './shared/pipes/capitalize.pipe';
+import { MainDetailComponent } from "./main/main-detail/main-detail.component";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { CapitalizePipe } from './shared/pipes/capitalize.pipe';
     LoaderComponent,
     MainComponent,
     MainListComponent,
-    CapitalizePipe
+    MainDetailComponent,
+    CapitalizePipe,
   ],
   imports: [
     BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule

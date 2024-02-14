@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core'
-import { TopicItemInterface } from "../../models/topic-item.interface";
+import { TopicItem } from "../../models/topic-item.interface";
+import { StarWarsService } from "../services/star-wars.service";
 
 @Component({
   selector:    'app-main-list',
@@ -7,7 +8,12 @@ import { TopicItemInterface } from "../../models/topic-item.interface";
   styleUrls:   ['./main-list.component.scss']
 })
 export class MainListComponent {
-  @Input() itemList: TopicItemInterface[] | null
+  @Input() itemList: TopicItem[] | null
 
-  constructor() { }
+  constructor(private starWarsService: StarWarsService) { }
+
+  selectItem(item: TopicItem) {
+    console.log(item);
+    this.starWarsService.loadListItem(item)
+  }
 }

@@ -1,4 +1,4 @@
-export interface TopicItemInterface {
+export interface TopicItem {
     uid?: string,
     name: string,
     url?: string
