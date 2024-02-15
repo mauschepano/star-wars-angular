@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { concatAll, switchMap, tap } from 'rxjs/operators';
 
 import { StarWarsService } from "./services/star-wars.service";
 import { TopicItem } from '../models/topic-item.interface';
@@ -11,28 +12,43 @@ import { Starship } from "../models/starship.interface";
 
 
 @Component({
-  selector:    'app-main',
+  selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls:   ['./main.component.scss'],
+  styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
   searchForm: FormGroup;
   items$: Observable<TopicItem[]> = this.starWarsService.listItems$;
-  item$: Observable<People|Planet|Starship|TopicItem|null> = this.starWarsService.item$;
-  headline$: Observable<string> = this.starWarsService.headLine$;
+  item$: Observable<People | Planet | Starship | null> = this.starWarsService.item$;
+  subHeadline: string = 'People';
 
-  constructor (private starWarsService: StarWarsService, private route: ActivatedRoute) {}
+  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute) {
+  }
+
   ngOnInit() {
     this.createSearchForm();
     this.registerOnRoutParameterChange().subscribe();
   }
-  onSubmit (){
+
+  onSubmit() {
     console.log('submitted')
   }
 
-  private registerOnRoutParameterChange(): Observable<TopicItem[]>{
+  public handleListItemClicked(item: TopicItem) {
+
+    console.log(item);
+  }
+
+  private registerOnRoutParameterChange(): Observable<any> {
+    // console.log(this.route.snapshot)
+    // const observable = this.starWarsService.loadItemsByRoute(StarWarsTopic1.People)
+
     return this.route.params.pipe(
-        switchMap((params: Params) => this.starWarsService.loadItemsByRoute(params['topic']))
+      tap((params: Params) => this.subHeadline = params['topic']),
+      // tap((params: Params) => console.log('Params: ', params)),
+      switchMap((params: Params) => this.starWarsService.loadItemsByRoute(params['topic'])),
+      concatAll(),
+      // tap((listItems: Params) => console.log('ListItems: ', listItems)),
     );
   }
 

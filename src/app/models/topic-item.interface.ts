@@ -1,6 +1,6 @@
 export interface TopicItem {
-    uid?: string,
-    name: string,
-    url?: string
+  uid: string,
+  name: string,
+  url: string
 }
 

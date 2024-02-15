@@ -11,7 +11,7 @@ import { TopicItem } from "../../models/topic-item.interface";
   styleUrls:   ['./main-detail.component.scss']
 })
 export class MainDetailComponent {
-  @Input() item: People | Planet | Starship | TopicItem | null
+  @Input() item: People | Planet | Starship | null
 
   constructor() {}
 
