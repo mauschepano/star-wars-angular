@@ -7,10 +7,10 @@
           type="text"
           class="form-control"
           placeholder="Search for {{ subHeadline | capitalize }}"
-          formControlName="search">
+          formArrayName="search">
       </div>
       <button
-        [disabled]="searchForm.invalid"
+        [disabled]="!isFormControlValid()"
         type="submit"
         class="btn btn-primary"
         style="margin-left: 10px">Submit

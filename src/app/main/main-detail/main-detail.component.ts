@@ -18,7 +18,7 @@ import { StarWarsTopic } from "../services/star-wars.service";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MainDetailComponent implements OnInit, OnChanges {
+export class MainDetailComponent implements OnChanges {
   @Input() item: ExtendedEntity | null
 
   constructor(private cdr: ChangeDetectorRef) {}
@@ -28,10 +28,6 @@ export class MainDetailComponent implements OnInit, OnChanges {
     if (currentValue !== previousValue) {
       this.cdr.detectChanges();
     }
-  }
-
-  ngOnInit() {
-    console.log(this.item);
   }
 
   protected readonly StarWarsTopic = StarWarsTopic;
