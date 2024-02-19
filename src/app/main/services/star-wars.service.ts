@@ -35,7 +35,10 @@ export class StarWarsService {
   get item$(): Observable<ExtendedEntity | null> {
     return this._item$.asObservable()
       .pipe(map((data) => {
-        return {...data, entityType: this.activeTopic} as ExtendedEntity
+        if (data) {
+          return {...data, entityType: this.activeTopic} as ExtendedEntity
+        }
+        return null
       }))
   }
 
