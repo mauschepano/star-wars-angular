@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core'
 
 import { ExtendedEntity } from "../../models/extendedEntity.interface";
+import { StarWarsTopic } from "../services/star-wars.service";
 
 @Component({
   selector: 'app-main-detail',
@@ -16,4 +17,6 @@ export class MainDetailComponent implements OnInit {
   ngOnInit() {
     console.log(this.item);
   }
+
+  protected readonly StarWarsTopic = StarWarsTopic;
 }

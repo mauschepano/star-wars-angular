@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Observable } from 'rxjs';
 import { concatAll, switchMap, tap } from 'rxjs/operators';
@@ -37,17 +37,11 @@ export class MainComponent implements OnInit {
   }
 
   private registerOnRoutParameterChange(): Observable<any> {
-    // console.log(this.route.snapshot)
-    // const observable = this.starWarsService.loadItemsByRoute(StarWarsTopic.People)
-
     return this.route.params.pipe(
       tap((params: Params) => this.subHeadline = params['topic']),
-      tap((params: Params) => this.starWarsService.setActiveTopic(params['topic'])),
       tap(() => this.starWarsService.resetDetailState()),
-      // tap((params: Params) => console.log('Params: ', params)),
       switchMap((params: Params) => this.starWarsService.loadItemsByRoute(params['topic'])),
       concatAll(),
-      // tap((listItems: Params) => console.log('ListItems: ', listItems)),
     );
   }
 

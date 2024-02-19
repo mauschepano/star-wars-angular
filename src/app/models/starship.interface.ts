@@ -1,5 +1,6 @@
-export interface Starship {
-  name: string,
+import { BaseEntity } from "./baseEntity.interface";
+
+export interface Starship extends BaseEntity {
   model: string,
   starship_class: string,
   manufacturer: string,
@@ -11,7 +12,6 @@ export interface Starship {
   hyperdrive_rating: string,
   cargo_capacity: string,
   consumables: string,
-  url: string
 
   MGLT?: string,
   pilots?: [],

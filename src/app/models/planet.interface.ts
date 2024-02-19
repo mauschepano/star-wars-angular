@@ -1,12 +1,12 @@
-export interface Planet {
-  name: string,
+import { BaseEntity } from "./baseEntity.interface";
+
+export interface Planet extends BaseEntity {
   population: string,
   climate: string,
   terrain: string,
   diameter: string,
   rotation_period: string,
   orbital_period: string,
-  url: string
 
   gravity?: string,
   surface_water?: string,
