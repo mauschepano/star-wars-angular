@@ -1,4 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from '@angular/core'
 
 import { ExtendedEntity } from "../../models/extendedEntity.interface";
 import { StarWarsTopic } from "../services/star-wars.service";
@@ -6,12 +14,20 @@ import { StarWarsTopic } from "../services/star-wars.service";
 @Component({
   selector: 'app-main-detail',
   templateUrl: './main-detail.component.html',
-  styleUrls: ['./main-detail.component.scss']
+  styleUrls: ['./main-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainDetailComponent implements OnInit {
+
+export class MainDetailComponent implements OnInit, OnChanges {
   @Input() item: ExtendedEntity | null
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    const {currentValue, previousValue, firstChange} = changes['item'];
+    if (currentValue !== previousValue) {
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnInit() {
