@@ -1,4 +1,5 @@
-import { Component } from '@angular/core'
+import { Component, Input } from '@angular/core'
+import { StarWarsTopic } from "../main/services/star-wars.service";
 
 @Component({
   selector: 'app-header',
@@ -6,7 +7,9 @@ import { Component } from '@angular/core'
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  constructor() { }
+  @Input() topics: StarWarsTopic[]
 
-  ngOnInit(): void { }
+  constructor() {
+  }
+
 }

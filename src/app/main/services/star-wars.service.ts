@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core'
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'
-import { BehaviorSubject, catchError, EMPTY, empty, Observable, ObservableInput, tap, throwError } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
+import { HttpClient } from '@angular/common/http'
+import {
+  BehaviorSubject,
+  Observable,
+  tap,
+  withLatestFrom
+} from 'rxjs'
+import { map } from 'rxjs/operators'
 
 import { TopicItem } from "../../models/topic-item.interface"
-import { Planet } from "../../models/planet.interface";
-import { Starship } from '../../models/starship.interface';
-import { People } from '../../models/people.interface';
-import { Params } from "@angular/router";
+import { ExtendedEntity } from "../../models/extendedEntity.interface";
 
 export enum StarWarsTopic {
-  People = '/people',
-  Planets = '/planets',
-  Starships = '/starships',
-}
-
-export enum StarWarsTopic1 {
   People = 'people',
   Planets = 'planets',
   Starships = 'starships',
@@ -25,12 +21,12 @@ export enum StarWarsTopic1 {
   providedIn: 'root'
 })
 export class StarWarsService {
-  topicList: TopicItem[]
+  // topicList: TopicItem[]
   loader$: boolean = false
 
   private _listItems$ = new BehaviorSubject<TopicItem[]>([])
-  private _item$ = new BehaviorSubject<People | Planet | Starship | null>(null)
-  private _activeTopic$ = new BehaviorSubject<StarWarsTopic1>(StarWarsTopic1.People)
+  private _item$ = new BehaviorSubject<ExtendedEntity | null>(null)
+  private _activeTopic$ = new BehaviorSubject<StarWarsTopic>(StarWarsTopic.People)
   private baseUrls = {
     tech: 'https://www.swapi.tech/api',
     dev: 'https://www.swapi.dev/api'
@@ -38,13 +34,13 @@ export class StarWarsService {
 
   constructor(private http: HttpClient) {
     this.activeTopic$
-      .pipe(tap((topic: StarWarsTopic1) => {
+      .pipe(tap((topic: StarWarsTopic) => {
         this.loadListItems(topic)
       }))
       .subscribe();
   }
 
-  get activeTopic$(): Observable<StarWarsTopic1> {
+  get activeTopic$(): Observable<StarWarsTopic> {
     return this._activeTopic$.asObservable();
   }
 
@@ -52,53 +48,19 @@ export class StarWarsService {
     return this._listItems$.asObservable();
   }
 
-  get item$(): Observable<People | Planet | Starship | null> {
-    return this._item$.asObservable();
-  }
-
-  getListFromApi(topic: StarWarsTopic): Observable<TopicItem[]> {
-    this.loader$ = true
-    return this.http
-      .get<TopicItem[]>(`${ this.baseUrls.tech }${ topic }`)
+  get item$(): Observable<ExtendedEntity | null> {
+    return this._item$.asObservable()
       .pipe(
-        map((data: any) => {
-            return data.results
-          }
-        )
+        // withLatestFrom(this.activeTopic$),
+        map((data: ExtendedEntity | null) => {
+          // data?.entityType = this.activeTopic$
+          console.log('##', data);
+          return data
+        })
       )
   }
 
-  getSearchedItem(
-    topic: StarWarsTopic,
-    value: string
-  ): Observable<People[] | Planet[] | Starship[]> {
-    console.log(`${ this.baseUrls.dev }${ topic }/?search=${ value }`)
-    return this.http
-      .get<People[] | Planet[] | Starship[]>(`${ this.baseUrls.dev }${ topic }/?search=${ value }`)
-      .pipe(
-        map((data: any) => {
-            return data.results
-          }
-        ),
-        catchError(this.handleError)
-      );
-  }
-
-  public loadListItem<T>(url: string): Observable<T | null> {
-    return this.http
-      .get<T>(url)
-      .pipe(
-        map((data: any) => {
-            return data.result.properties
-          }
-        ),
-        tap((item: T) => console.log(item))
-      );
-
-    return EMPTY;
-  }
-
-  public loadItemsByRoute(topic: StarWarsTopic1): Observable<TopicItem[]> {
+  public loadItemsByRoute(topic: StarWarsTopic): Observable<TopicItem[]> {
     return this.loadListItems(topic)
       .pipe(
         tap((items: TopicItem[]) => this._listItems$.next(items))
@@ -106,25 +68,51 @@ export class StarWarsService {
   }
 
   public loadListItemDetailById(uid: string) {
-    const {url, ...rest} = this._listItems$.value.filter((item) => item.uid === uid)[0]
+    const {url, ...rest} = this._listItems$.value.filter((item: TopicItem) => item.uid === uid)[0]
     this.loadListItem(url).pipe(
-      tap((item: People | null) => console.log(item))
+      tap((item: ExtendedEntity | null) => {
+        // const entityType: StarWarsTopic = item?.url.includes('planet')
+        //   ? StarWarsTopic.Planets
+        //   : item?.url.includes('starship') ? StarWarsTopic.Starships : StarWarsTopic.People
+        this._item$.next(item);
+        // this._activeTopic$.next(entityType)
+        // console.log(item);
+      })
     ).subscribe();
-    console.log(url)
   }
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      console.error('An error occurred:', error.error);
-    } else {
-      console.error(
-        `Backend returned code ${ error.status }, body was: `, error.error);
-    }
-    // Return an observable with a user-facing error message.
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+  public resetDetailState(): void {
+    this._item$.next(null)
   }
 
-  private loadListItems(topic: StarWarsTopic1): Observable<TopicItem[]> {
+  public setActiveTopic(topic: StarWarsTopic): void {
+    this._activeTopic$.next(topic)
+  }
+
+  private loadListItems(topic: StarWarsTopic): Observable<TopicItem[]> {
     return this.getListFromApi(`/${ topic }` as StarWarsTopic)
+  }
+
+  private loadListItem(url: string): Observable<ExtendedEntity | null> {
+    return this.http
+      .get<ExtendedEntity>(url)
+      .pipe(
+        map((data: any) => {
+            return data.result.properties
+          }
+        )
+      );
+  }
+
+  private getListFromApi(topic: StarWarsTopic): Observable<TopicItem[]> {
+    this.loader$ = true
+    return this.http
+      .get<TopicItem[]>(`${ this.baseUrls.tech }/${ topic }`)
+      .pipe(
+        map((data: any) => {
+            return data.results
+          }
+        )
+      )
   }
 }

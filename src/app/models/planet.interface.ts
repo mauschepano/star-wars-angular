@@ -6,12 +6,12 @@ export interface Planet {
   diameter: string,
   rotation_period: string,
   orbital_period: string,
+  url: string
 
   gravity?: string,
   surface_water?: string,
   created?: string,
   edited?: string,
-  url?: string
   type: PlanetType
 }
 

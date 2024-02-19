@@ -11,10 +11,10 @@ export interface Starship {
   hyperdrive_rating: string,
   cargo_capacity: string,
   consumables: string,
+  url: string
 
   MGLT?: string,
   pilots?: [],
   created?: string,
-  edited?: string,
-  url?: string
+  edited?: string
 }

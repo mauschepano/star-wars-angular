@@ -1,19 +1,17 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 
-import { People } from "../../models/people.interface";
-import { Planet } from "../../models/planet.interface";
-import { Starship } from "../../models/starship.interface";
-import { TopicItem } from "../../models/topic-item.interface";
+import { ExtendedEntity } from "../../models/extendedEntity.interface";
 
 @Component({
-  selector:    'app-main-detail',
+  selector: 'app-main-detail',
   templateUrl: './main-detail.component.html',
-  styleUrls:   ['./main-detail.component.scss']
+  styleUrls: ['./main-detail.component.scss']
 })
-export class MainDetailComponent {
-  @Input() item: People | Planet | Starship | null
+export class MainDetailComponent implements OnInit {
+  @Input() item: ExtendedEntity | null
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit() {
     console.log(this.item);
