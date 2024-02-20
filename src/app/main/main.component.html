@@ -7,7 +7,7 @@
           type="text"
           class="form-control"
           placeholder="Search for {{ subHeadline | capitalize }}"
-          formArrayName="search">
+          formControlName="search">
       </div>
       <button
         [disabled]="!isFormControlValid()"
@@ -19,13 +19,27 @@
   </div>
 </div>
 <hr>
-<div class="row">
-  <div class="col-md-5">
-    <div class="list-group">
-      <app-main-list [itemList]="items$ | async"></app-main-list>
+<!--  TODO: warum funktioniert "else" nicht?-->
+<div *ngIf="(items$ | async) as itemList" class="row">
+  <div *ngIf="itemList.length > 0">
+    <div class="col-md-5">
+      <div class="list-group">
+        <app-main-list [itemList]="itemList"></app-main-list>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <app-main-detail [item]="item$ | async"></app-main-detail>
     </div>
   </div>
-  <div class="col-md-7">
-    <app-main-detail [item]="item$ | async"></app-main-detail>
+  <!--  TODO: warum funktioniert "else" nicht?-->
+  <div *ngIf="!(itemList.length > 0)" class="row">
+    <div class="alert alert-info" role="alert">
+      No Results found. Don't be sad, we can find something else!
+      Try
+      <a (click)="onDefaultSearch()" class="alert-link" style="cursor: pointer">
+        {{ defaultSearchItem | capitalize }}
+      </a> for instance!
+    </div>
   </div>
 </div>
+

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import {
-  BehaviorSubject, Observable, tap, withLatestFrom
-} from 'rxjs'
+import { BehaviorSubject, Observable, tap } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { TopicItem } from "../../models/topic-item.interface"
@@ -10,6 +8,10 @@ import { ExtendedEntity } from "../../models/extendedEntity.interface";
 
 export enum StarWarsTopic {
   People = 'people', Planets = 'planets', Starships = 'starships',
+}
+
+export enum StarWarsSearch {
+  DefaultItem = 'luke',
 }
 
 @Injectable({
@@ -20,8 +22,8 @@ export class StarWarsService {
 
   private activeTopic: string = StarWarsTopic.People
   private baseUrls = {
-    tech: 'https://www.swapi.tech/api',
-    dev: 'https://www.swapi.dev/api'
+    tech: 'https://www.swapi.dev/api',
+    dev: 'https://swapi.dev/api'
   }
   private _listItems$ = new BehaviorSubject<TopicItem[]>([])
   private _item$ = new BehaviorSubject<ExtendedEntity | null>(null)
@@ -36,6 +38,7 @@ export class StarWarsService {
     return this._item$.asObservable()
       .pipe(map((data) => {
         if (data) {
+          console.log({...data, entityType: this.activeTopic} as ExtendedEntity)
           return {...data, entityType: this.activeTopic} as ExtendedEntity
         }
         return null
@@ -47,13 +50,32 @@ export class StarWarsService {
       .pipe(tap((items: TopicItem[]) => this._listItems$.next(items)));
   }
 
-  public loadListItemDetailById(uid: string) {
-    const {url, ...rest} = this._listItems$.value.filter((item: TopicItem) => item.uid === uid)[0]
-    this.loadListItem(url).pipe(tap((item: ExtendedEntity | null) => this._item$.next(item))).subscribe();
+  public loadListItemDetailById(url: string) {
+    this.loadListItem(url).pipe(
+      tap((item: ExtendedEntity | null) => this._item$.next(item))
+    ).subscribe();
   }
 
   public resetDetailState(): void {
     this._item$.next(null)
+  }
+
+  public loadSearchItemByForm(searchItem: string): void {
+    const url = `${ this.baseUrls.dev }/${ this.activeTopic }/?search=${ searchItem }&format=json`
+    this.loadSearchItem(url).pipe(
+      tap(() => this.resetDetailState()),
+      tap((items: TopicItem[]) => this._listItems$.next(items))
+    ).subscribe();
+  }
+
+  private loadSearchItem(url: string): Observable<TopicItem[]> {
+    return this.http
+      .get<ExtendedEntity>(url)
+      .pipe(map((data: any) => data.results));
+  }
+
+  public setActiveTopic(topic: StarWarsTopic): void {
+    this.activeTopic = topic
   }
 
   private loadListItems(topic: StarWarsTopic): Observable<TopicItem[]> {
@@ -63,13 +85,13 @@ export class StarWarsService {
   private loadListItem(url: string): Observable<ExtendedEntity | null> {
     return this.http
       .get<ExtendedEntity>(url)
-      .pipe(map((data: any) => data.result.properties));
+      .pipe(map((data: any) => data));
   }
 
   private getListFromApi(topic: StarWarsTopic): Observable<TopicItem[]> {
     this.loader$ = true
     return this.http
-      .get<TopicItem[]>(`${ this.baseUrls.tech }/${ topic }`)
+      .get<TopicItem[]>(`${ this.baseUrls.dev }/${ topic }`)
       .pipe(map((data: any) => data.results))
   }
 }

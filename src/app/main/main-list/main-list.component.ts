@@ -17,6 +17,6 @@ export class MainListComponent {
 
   selectItem(item: TopicItem) {
     // this.listItemClicked.emit(item)
-    this.starWarsService.loadListItemDetailById(item.uid)
+    this.starWarsService.loadListItemDetailById(item.url)
   }
 }

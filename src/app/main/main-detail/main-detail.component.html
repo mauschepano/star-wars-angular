@@ -1,41 +1,28 @@
 <!--<app-loader *ngIf="loading"></app-loader>-->
 <ng-container *ngIf="item !== null; else initState">
   <div class="row">
-    <div class="col-xs-14">
-      <h3>{{ item.name }}</h3>
-    </div>
-    <div class="col-xs-14">
-      <h5>Properties</h5>
-      <ng-container *ngIf="item?.entityType === StarWarsTopic.People">
-        <div class="row">
-          <div class="col-xs-4">Gender:</div>
-          <div class="col-xs-8">{{ item.gender }}</div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4">Birthyear:</div>
-          <div class="col-xs-8">{{ item.birth_year }}</div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4">Height:</div>
-          <div class="col-xs-8">{{ item.height }}</div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4">Mass:</div>
-          <div class="col-xs-8">{{ item.mass }}</div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4">Hair Color:</div>
-          <div class="col-xs-8">{{ item.hair_color }}</div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4">Skin Color:</div>
-          <div class="col-xs-8">{{ item.skin_color }}</div>
-        </div>
-        <div class="row">
-          <div class="col-xs-4">Eye Color:</div>
-          <div class="col-xs-8">{{ item.eye_color }}</div>
-        </div>
-      </ng-container>
+    <div class="list-group">
+      <div class="list-group-item ">
+        <h4 class="list-group-item-heading">{{ item.name }}</h4>
+
+        <!--
+        TODO: Wie kann ich key & value ausgeben?
+
+        key value pipe funktioniert nicht
+        https://angular.io/api/common/KeyValuePipe
+
+        <div *ngFor="let item of object | keyvalue">{{ item.key }}:{{ item.value }}</div>
+        -->
+        <ng-container *ngIf="item?.entityType === StarWarsTopic.People">
+          <app-main-detail-people [item]="item"></app-main-detail-people>
+        </ng-container>
+        <ng-container *ngIf="item?.entityType === StarWarsTopic.Planets">
+          <app-main-detail-planet [item]="item"></app-main-detail-planet>
+        </ng-container>
+        <ng-container *ngIf="item?.entityType === StarWarsTopic.Starships">
+          <app-main-detail-starship [item]="item"></app-main-detail-starship>
+        </ng-container>
+      </div>
     </div>
   </div>
 </ng-container>

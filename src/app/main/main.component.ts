@@ -1,9 +1,9 @@
 import { AfterViewChecked, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Observable } from 'rxjs';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Observable, of } from 'rxjs';
 import { concatAll, switchMap, tap } from 'rxjs/operators';
 
-import { StarWarsService, StarWarsTopic } from "./services/star-wars.service";
+import { StarWarsSearch, StarWarsService, StarWarsTopic } from "./services/star-wars.service";
 import { TopicItem } from '../models/topic-item.interface';
 import { ActivatedRoute, Params } from "@angular/router";
 import { ExtendedEntity } from "../models/extendedEntity.interface";
@@ -15,17 +15,13 @@ import { ExtendedEntity } from "../models/extendedEntity.interface";
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-  searchForm: FormArray;
+  searchForm: FormGroup;
+  subHeadline: StarWarsTopic = StarWarsTopic.People;
+  defaultSearchItem: string = StarWarsSearch.DefaultItem
   items$: Observable<TopicItem[]> = this.starWarsService.listItems$;
   item$: Observable<ExtendedEntity | null> = this.starWarsService.item$;
-  subHeadline: StarWarsTopic = StarWarsTopic.People;
 
-  constructor(
-    private readonly starWarsService: StarWarsService,
-    private readonly route: ActivatedRoute,
-    private readonly fb: FormBuilder
-  )
-  {}
+  constructor(private starWarsService: StarWarsService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.createSearchForm();
@@ -33,21 +29,25 @@ export class MainComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.searchForm)
+    const searchItem = this.searchForm.value.search
+    this.starWarsService.loadSearchItemByForm(searchItem)
+  }
+
+  onDefaultSearch() {
+    this.starWarsService.loadSearchItemByForm(this.defaultSearchItem)
   }
 
   public isFormControlValid(): boolean {
-    // const formControl = this.searchForm.get('search') as FormControl
-    const formControl = this.searchForm.controls
+    const formControl = this.searchForm.get('search') as FormControl
+    // const formControl = this.searchForm.controls
 
-    console.log(formControl);
-
-    return true
+    return formControl.valid
   }
 
   private registerOnRoutParameterChange(): Observable<any> {
     return this.route.params.pipe(
       tap((params: Params) => this.subHeadline = params['topic']),
+      tap((params: Params) => this.starWarsService.setActiveTopic(params['topic'])),
       tap(() => this.starWarsService.resetDetailState()),
       switchMap((params: Params) => this.starWarsService.loadItemsByRoute(params['topic'])),
       concatAll(),
@@ -55,14 +55,10 @@ export class MainComponent implements OnInit {
   }
 
   private createSearchForm() {
-    this.searchForm = this.fb.group({
-      searchForm: this.fb.array([
-        new FormControl('', {
-          validators: [
-            Validators.required()
-          ]
-        })
+    this.searchForm = new FormGroup({
+      search: new FormControl(null, [
+        Validators.required
       ])
-    })
+    });
   }
 }
