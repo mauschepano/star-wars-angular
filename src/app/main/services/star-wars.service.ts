@@ -68,17 +68,6 @@ export class StarWarsService {
     this.activeTopic = topic
   }
 
-  public getDefaultSearchItemByTopic(topic: StarWarsTopic): StarWarsSearch {
-    switch (topic) {
-      case StarWarsTopic.People:
-        return StarWarsSearch.People
-      case StarWarsTopic.Planets:
-        return StarWarsSearch.Planets
-      case StarWarsTopic.Starships:
-        return StarWarsSearch.Starships
-    }
-  }
-
   private loadSearchItem(url: string): Observable<TopicItem[]> {
     return this.http
       .get<ExtendedEntity>(url)

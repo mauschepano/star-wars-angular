@@ -30,7 +30,7 @@ export class MainComponent implements OnInit {
 
   onSubmit() {
     const searchItem = this.searchForm.value.search
-    
+
     this.starWarsService.loadSearchItemByForm(searchItem)
     this.searchForm.reset()
   }
@@ -48,10 +48,10 @@ export class MainComponent implements OnInit {
   private registerOnRoutParameterChange(): Observable<any> {
     return this.route.params.pipe(
       tap((params: Params) => this.subHeadline = params['topic']),
-      tap((params: Params) => this.defaultSearchItem = this.starWarsService.getDefaultSearchItemByTopic(params['topic'])),
       tap((params: Params) => this.starWarsService.setActiveTopic(params['topic'])),
       tap(() => this.starWarsService.resetDetailState()),
       switchMap((params: Params) => this.starWarsService.loadItemsByRoute(params['topic'])),
+      tap((items: TopicItem[]) => this.defaultSearchItem = items[Math.floor(Math.random() * 10)].name),
       concatAll(),
     );
   }

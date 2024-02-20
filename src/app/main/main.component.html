@@ -19,9 +19,9 @@
   </div>
 </div>
 <hr>
-<!--  TODO: warum funktioniert "else" nicht?-->
-<div *ngIf="(items$ | async) as itemList" class="row">
-  <div *ngIf="itemList.length > 0">
+
+<ng-container *ngIf="(items$ | async) as itemList; else alternative">
+  <ng-container *ngIf="itemList.length > 0; else noItemsFound" class="row">
     <div class="col-md-5">
       <div class="list-group">
         <app-main-list [itemList]="itemList"></app-main-list>
@@ -30,9 +30,8 @@
     <div class="col-md-7">
       <app-main-detail [item]="item$ | async"></app-main-detail>
     </div>
-  </div>
-  <!--  TODO: warum funktioniert "else" nicht?-->
-  <div *ngIf="!(itemList.length > 0)" class="row">
+  </ng-container>
+  <ng-template #noItemsFound class="row">
     <div class="alert alert-info" role="alert">
       No Results found. Don't be sad, we can find something else!
       Try
@@ -40,6 +39,9 @@
         {{ defaultSearchItem | capitalize }}
       </a> for instance!
     </div>
-  </div>
-</div>
+  </ng-template>
+</ng-container>
+<ng-template #alternative>
+  Loading
+</ng-template>
 

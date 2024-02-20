@@ -4,15 +4,6 @@
     <div class="list-group">
       <div class="list-group-item ">
         <h4 class="list-group-item-heading">{{ item.name }}</h4>
-
-        <!--
-        TODO: Wie kann ich key & value ausgeben?
-
-        key value pipe funktioniert nicht
-        https://angular.io/api/common/KeyValuePipe
-
-        <div *ngFor="let item of object | keyvalue">{{ item.key }}:{{ item.value }}</div>
-        -->
         <ng-container *ngIf="item?.entityType === StarWarsTopic.People">
           <app-main-detail-people [item]="item"></app-main-detail-people>
         </ng-container>
