@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TabService } from "./services/tab.service";
-import { Observable } from "rxjs";
+import { Observable, skip } from "rxjs";
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tab-component',
@@ -8,13 +9,17 @@ import { Observable } from "rxjs";
   styleUrls: ['./tab.component.css']
 })
 export class TabComponent implements OnInit {
-  public config: Observable<Record<string, string>[]> = this.tabService.config
+  public config$: Observable<Record<string, string>[]> = this.tabService.config.pipe(
+      skip(1),
+      tap((v) => {
+        console.log(v);
+      })
+  )
 
   constructor(private tabService: TabService) {
   }
 
   ngOnInit() {
     this.tabService.init()
-    console.log(this.config)
   }
 }

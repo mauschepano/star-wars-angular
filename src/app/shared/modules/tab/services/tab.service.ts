@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, EMPTY, Observable, tap } from "rxjs";
+import { unusedExport } from '@angular/compiler/testing';
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +9,12 @@ import { BehaviorSubject, EMPTY, Observable, tap } from "rxjs";
 export class TabService {
   private baseUrl: string = 'https://swapi.dev/api'
 
-  public _config$: BehaviorSubject<Record<string, string>[] | null> = new BehaviorSubject([])
+  private _config$: BehaviorSubject<never[]> = new BehaviorSubject([])
 
   constructor(private http: HttpClient) { }
 
-  get config(): BehaviorSubject<Record<string, string>[] | null> {
-    return this._config$
+  get config(): Observable<Record<string, string>[]> {
+    return this._config$.asObservable();
   }
 
   public init() {
@@ -28,15 +29,13 @@ export class TabService {
   //   ).subscribe();
   // }
 
-  private loadInitialEntities(): Observable<Record<string, string>[] | null> {
+  private loadInitialEntities(): Observable<void> {
     return this.http
-      .get<Record<string, string>[] | null>(this.baseUrl).pipe(
+      .get(this.baseUrl).pipe(
         tap((data: any) => {
-          if (!data) {
-            return EMPTY
+          if(data){
+            this._config$.next(data)
           }
-
-          this._config$.next(data)
         })
       );
   }
