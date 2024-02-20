@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-} from '@angular/core'
+import { Component, Input } from '@angular/core'
 
 import { ExtendedEntity } from "../../../models/extendedEntity.interface";
 
@@ -11,11 +6,10 @@ import { ExtendedEntity } from "../../../models/extendedEntity.interface";
   selector: 'app-main-detail-planet',
   templateUrl: './planet.component.html',
   styleUrls: ['./planet.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class PlanetComponent {
   @Input() item: ExtendedEntity
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor() {}
 }

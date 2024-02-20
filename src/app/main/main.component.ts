@@ -1,6 +1,6 @@
-import { AfterViewChecked, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { concatAll, switchMap, tap } from 'rxjs/operators';
 
 import { StarWarsSearch, StarWarsService, StarWarsTopic } from "./services/star-wars.service";
@@ -39,7 +39,6 @@ export class MainComponent implements OnInit {
 
   public isFormControlValid(): boolean {
     const formControl = this.searchForm.get('search') as FormControl
-    // const formControl = this.searchForm.controls
 
     return formControl.valid
   }
