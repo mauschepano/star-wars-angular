@@ -17,7 +17,7 @@ import { ExtendedEntity } from "../models/extendedEntity.interface";
 export class MainComponent implements OnInit {
   searchForm: FormGroup;
   subHeadline: StarWarsTopic = StarWarsTopic.People;
-  defaultSearchItem: string = StarWarsSearch.DefaultItem
+  defaultSearchItem: string = StarWarsSearch.People
   items$: Observable<TopicItem[]> = this.starWarsService.listItems$;
   item$: Observable<ExtendedEntity | null> = this.starWarsService.item$;
 
@@ -30,7 +30,9 @@ export class MainComponent implements OnInit {
 
   onSubmit() {
     const searchItem = this.searchForm.value.search
+    
     this.starWarsService.loadSearchItemByForm(searchItem)
+    this.searchForm.reset()
   }
 
   onDefaultSearch() {
@@ -46,6 +48,7 @@ export class MainComponent implements OnInit {
   private registerOnRoutParameterChange(): Observable<any> {
     return this.route.params.pipe(
       tap((params: Params) => this.subHeadline = params['topic']),
+      tap((params: Params) => this.defaultSearchItem = this.starWarsService.getDefaultSearchItemByTopic(params['topic'])),
       tap((params: Params) => this.starWarsService.setActiveTopic(params['topic'])),
       tap(() => this.starWarsService.resetDetailState()),
       switchMap((params: Params) => this.starWarsService.loadItemsByRoute(params['topic'])),

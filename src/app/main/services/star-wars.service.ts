@@ -11,7 +11,7 @@ export enum StarWarsTopic {
 }
 
 export enum StarWarsSearch {
-  DefaultItem = 'luke',
+  People = 'luke', Planets = 'tatooine', Starships = 'CR90'
 }
 
 @Injectable({
@@ -38,7 +38,6 @@ export class StarWarsService {
     return this._item$.asObservable()
       .pipe(map((data) => {
         if (data) {
-          console.log({...data, entityType: this.activeTopic} as ExtendedEntity)
           return {...data, entityType: this.activeTopic} as ExtendedEntity
         }
         return null
@@ -68,14 +67,25 @@ export class StarWarsService {
     ).subscribe();
   }
 
+  public setActiveTopic(topic: StarWarsTopic): void {
+    this.activeTopic = topic
+  }
+
+  public getDefaultSearchItemByTopic(topic: StarWarsTopic): StarWarsSearch {
+    switch (topic) {
+      case StarWarsTopic.People:
+        return StarWarsSearch.People
+      case StarWarsTopic.Planets:
+        return StarWarsSearch.Planets
+      case StarWarsTopic.Starships:
+        return StarWarsSearch.Starships
+    }
+  }
+
   private loadSearchItem(url: string): Observable<TopicItem[]> {
     return this.http
       .get<ExtendedEntity>(url)
       .pipe(map((data: any) => data.results));
-  }
-
-  public setActiveTopic(topic: StarWarsTopic): void {
-    this.activeTopic = topic
   }
 
   private loadListItems(topic: StarWarsTopic): Observable<TopicItem[]> {
