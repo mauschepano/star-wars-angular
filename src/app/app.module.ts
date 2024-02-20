@@ -13,6 +13,7 @@ import { MainDetailComponent } from "./main/main-detail/main-detail.component";
 import { PeopleComponent } from "./main/main-detail/people/people.component";
 import { PlanetComponent } from "./main/main-detail/planet/planet.component";
 import { StarshipComponent } from "./main/main-detail/starship/starship.component";
+import { TabModule } from "./shared/modules/tab/tab.module";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,12 @@ import { StarshipComponent } from "./main/main-detail/starship/starship.componen
     StarshipComponent
   ],
   imports: [
-    BrowserModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppRoutingModule
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    TabModule
   ],
   providers: [],
   bootstrap: [AppComponent]

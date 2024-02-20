@@ -3,12 +3,13 @@
     <div class="navbar-header">
       <a routerLink="/people" class="navbar-brand">Star Wars</a>
     </div>
-    <div class="collaps navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li *ngFor="let topic of topics" routerLinkActive="active">
-          <a [routerLink]="'/' + topic">{{ topic | capitalize }}</a>
-        </li>
-      </ul>
-    </div>
+    <!--    <div class="collaps navbar-collapse">-->
+    <!--      <ul class="nav navbar-nav">-->
+    <!--        <li *ngFor="let topic of topics" routerLinkActive="active">-->
+    <!--          <a [routerLink]="'/' + topic">{{ topic | capitalize }}</a>-->
+    <!--        </li>-->
+    <!--      </ul>-->
+    <!--    </div>-->
+    <app-tab-component></app-tab-component>
   </div>
 </nav>
