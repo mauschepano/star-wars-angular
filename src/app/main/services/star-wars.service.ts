@@ -21,10 +21,7 @@ export class StarWarsService {
   loader$: boolean = false
 
   private activeTopic: string = StarWarsTopic.People
-  private baseUrls = {
-    tech: 'https://www.swapi.dev/api',
-    dev: 'https://swapi.dev/api'
-  }
+  private baseUrls = 'https://swapi.dev/api'
   private _listItems$ = new BehaviorSubject<TopicItem[]>([])
   private _item$ = new BehaviorSubject<ExtendedEntity | null>(null)
 
@@ -60,7 +57,7 @@ export class StarWarsService {
   }
 
   public loadSearchItemByForm(searchItem: string): void {
-    const url = `${ this.baseUrls.dev }/${ this.activeTopic }/?search=${ searchItem }&format=json`
+    const url = `${ this.baseUrls }/${ this.activeTopic }/?search=${ searchItem }&format=json`
     this.loadSearchItem(url).pipe(
       tap(() => this.resetDetailState()),
       tap((items: TopicItem[]) => this._listItems$.next(items))
@@ -101,7 +98,7 @@ export class StarWarsService {
   private getListFromApi(topic: StarWarsTopic): Observable<TopicItem[]> {
     this.loader$ = true
     return this.http
-      .get<TopicItem[]>(`${ this.baseUrls.dev }/${ topic }`)
+      .get<TopicItem[]>(`${ this.baseUrls }/${ topic }`)
       .pipe(map((data: any) => data.results))
   }
 }
