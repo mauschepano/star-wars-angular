@@ -7,6 +7,8 @@ import {
 } from 'rxjs/operators';
 
 /**
+ * Source: https://stackblitz.com/edit/show-loader-time?devtoolsheight=33&file=src%2Fapp%2Fposts%2Fposts.component.ts,src%2Fapp%2Fposts%2Fposts.component.html,src%2Fapp%2Fshared%2Fhelpers%2Foperators%2Fshow-loader-time.operator.ts
+ *
  * Returns an operator fnc that subscribes to source observable and
  * emits a boolean value indicating whether to show or hide a loader
  *
