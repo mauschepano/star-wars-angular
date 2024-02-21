@@ -6,21 +6,19 @@ import { Tab } from './interfaces/tab.interface';
 
 @Component({
   selector: 'app-tab-component',
-  templateUrl: './tab.component.html',
-  styleUrls: ['./tab.component.css']
+  templateUrl: './tab-config.component.html',
 })
-export class TabComponent implements OnInit {
+export class TabConfigComponent implements OnInit {
   public config$: Observable<Record<string, string>> = this.tabService.config.pipe(
-      skip(1),
-      tap((v) => {
-        console.log(v);
-        this.createTabs(v);
-      })
+    skip(1),
+    tap((v) => {
+      console.log(v);
+      this.createTabs(v);
+    })
   );
   public tabs: Tab[] = [];
 
-  constructor(private tabService: TabService) {
-  }
+  constructor(private tabService: TabService) {}
 
   ngOnInit() {
     this.tabService.init()
@@ -35,7 +33,7 @@ export class TabComponent implements OnInit {
     console.log(this.tabs);
   }
 
-  logger(key: string){
+  logger(key: string) {
     switch (key) {
       case 'planets': {
         this.loggerOfPlanets();
@@ -51,13 +49,15 @@ export class TabComponent implements OnInit {
     }
   }
 
-  loggerOfPlanets(str?: string){
+  loggerOfPlanets(str?: string) {
     console.log('logger of Planets');
   }
-  loggerOfStarships(str?: string){
+
+  loggerOfStarships(str?: string) {
     console.log('logger of Starships');
   }
-  loggerOfPeople(str?: string){
+
+  loggerOfPeople(str?: string) {
     console.log('logger of People');
   }
 
