@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Observable } from 'rxjs';
+import { delay, Observable, share } from 'rxjs';
 import { concatAll, switchMap, tap } from 'rxjs/operators';
 
 import { StarWarsSearch, StarWarsService, StarWarsTopic } from "./services/star-wars.service";
 import { TopicItem } from '../models/topic-item.interface';
 import { ActivatedRoute, Params } from "@angular/router";
 import { ExtendedEntity } from "../models/extendedEntity.interface";
+import { showTimedLoader } from "../shared/operators/show-timed-loader.operator";
 
 
 @Component({
@@ -15,12 +16,18 @@ import { ExtendedEntity } from "../models/extendedEntity.interface";
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
+  private LOADER_DELAY = 500;
+  private TIME_AFTER_LOADER_DELAY = 1500;
   searchForm: FormGroup;
   subHeadline: StarWarsTopic = StarWarsTopic.People;
   defaultSearchItem: string = StarWarsSearch.People
-  items$: Observable<TopicItem[]> = this.starWarsService.listItems$;
+  items$: Observable<TopicItem[]> = this.starWarsService.listItems$.pipe(
+    share()
+  );
   item$: Observable<ExtendedEntity | null> = this.starWarsService.item$;
-  isLoading$: Observable<boolean> = this.starWarsService.isLoading;
+  isLoading$: Observable<boolean> = this.items$.pipe(
+    showTimedLoader(this.LOADER_DELAY, this.TIME_AFTER_LOADER_DELAY)
+  )
 
   constructor(private starWarsService: StarWarsService, private route: ActivatedRoute) {}
 
