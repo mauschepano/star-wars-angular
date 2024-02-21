@@ -1,47 +1,49 @@
-<div class="row">
-  <div class="col-xs-4"><h3>{{ subHeadline | capitalize }}</h3></div>
-  <div class="col-xs-8">
-    <form class="navbar-form navbar-right" role="search" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search for {{ subHeadline | capitalize }}"
-          formControlName="search">
-      </div>
-      <button
-        [disabled]="!isFormControlValid()"
-        type="submit"
-        class="btn btn-primary"
-        style="margin-left: 10px">Submit
-      </button>
-    </form>
+<ng-container *ngIf="!(isLoading$ | async); else showLoading">
+  <div class="row">
+    <div class="col-xs-4"><h3>{{ subHeadline | capitalize }}</h3></div>
+    <div class="col-xs-8">
+      <form class="navbar-form navbar-right" role="search" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search for {{ subHeadline | capitalize }}"
+            formControlName="search">
+        </div>
+        <button
+          [disabled]="!isFormControlValid()"
+          type="submit"
+          class="btn btn-primary"
+          style="margin-left: 10px">Submit
+        </button>
+      </form>
+    </div>
   </div>
-</div>
-<hr>
+  <hr>
 
-<ng-container *ngIf="(items$ | async) as itemList; else alternative">
-  <ng-container *ngIf="itemList.length > 0; else noItemsFound" class="row">
-    <div class="col-md-5">
-      <div class="list-group">
-        <app-main-list [itemList]="itemList"></app-main-list>
+  <ng-container *ngIf="(items$ | async) as itemList;">
+    <ng-container *ngIf="itemList.length > 0; else noItemsFound" class="row">
+      <div class="col-md-5">
+        <div class="list-group">
+          <app-main-list [itemList]="itemList"></app-main-list>
+        </div>
       </div>
-    </div>
-    <div class="col-md-7">
-      <app-main-detail [item]="item$ | async"></app-main-detail>
-    </div>
+      <div class="col-md-7">
+        <app-main-detail [item]="item$ | async"></app-main-detail>
+      </div>
+    </ng-container>
+    <ng-template #noItemsFound class="row">
+      <div class="alert alert-info" role="alert">
+        No Results found. Don't be sad, we can find something else!
+        Try
+        <a (click)="onDefaultSearch()" class="alert-link" style="cursor: pointer">
+          {{ defaultSearchItem | capitalize }}
+        </a> for instance!
+      </div>
+    </ng-template>
   </ng-container>
-  <ng-template #noItemsFound class="row">
-    <div class="alert alert-info" role="alert">
-      No Results found. Don't be sad, we can find something else!
-      Try
-      <a (click)="onDefaultSearch()" class="alert-link" style="cursor: pointer">
-        {{ defaultSearchItem | capitalize }}
-      </a> for instance!
-    </div>
-  </ng-template>
 </ng-container>
-<ng-template #alternative>
-  Loading
+<ng-template #showLoading>
+  <app-loader></app-loader>
 </ng-template>
 

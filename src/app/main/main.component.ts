@@ -20,6 +20,7 @@ export class MainComponent implements OnInit {
   defaultSearchItem: string = StarWarsSearch.People
   items$: Observable<TopicItem[]> = this.starWarsService.listItems$;
   item$: Observable<ExtendedEntity | null> = this.starWarsService.item$;
+  isLoading$: Observable<boolean> = this.starWarsService.isLoading;
 
   constructor(private starWarsService: StarWarsService, private route: ActivatedRoute) {}
 
