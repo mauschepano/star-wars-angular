@@ -10,12 +10,11 @@ import { Tab } from "../interfaces/tab.interface";
 export class TabService {
   private baseUrl: string = 'https://swapi.dev/api'
 
-  private _config$: BehaviorSubject<never[]> = new BehaviorSubject([])
-  private _tabs$: BehaviorSubject<Tab[]> = new BehaviorSubject([{name: '', isActive: false, onClick: () => {}}])
+  private _config$: BehaviorSubject<Record<string, string>> = new BehaviorSubject({})
 
   constructor(private http: HttpClient) { }
 
-  get config(): Observable<Record<string, string>[]> {
+  get config(): Observable<Record<string, string>> {
     return this._config$.asObservable();
   }
 
@@ -31,32 +30,14 @@ export class TabService {
   //   ).subscribe();
   // }
 
-  private loadInitialEntities(): Observable<void> {
+  private loadInitialEntities(): Observable<Object> {
     return this.http
       .get(this.baseUrl).pipe(
-        tap((data: any) => {
+        tap((data: Object) => {
           if (data) {
-
-            this._config$.next(data)
+            this._config$.next(data as Record<string, string>);
           }
         })
       );
-  }
-
-  private createTabs(record: Record<string, string>): void {
-    const tabs: BehaviorSubject<Tab[]> = [];
-    for (const [key, value] of Object.entries(record)) {
-      this.createTab(key, value)
-    }
-  }
-
-  private createTab(key: string, value: string): Tab {
-    const tab: Tab = {
-      name: key,
-      isActive: false,
-      onClick: () => { console.log('clicked')}
-    }
-
-    return tab;
   }
 }
