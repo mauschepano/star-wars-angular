@@ -1,5 +1,6 @@
 <ng-container *ngIf="config$ | async; else noConfig">
-  <button *ngFor="let tab of tabs" (click)="tab.onClick()">{{ tab.name }}</button>
+  <app-tab *ngFor="let tab of tabs" [tab]="tab"></app-tab>
+  <!--  <button  (click)="tab.onClick()">{{ tab.name }}</button>-->
 </ng-container>
 <ng-template #noConfig>
   <h3>No Config Data Found</h3>

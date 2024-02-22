@@ -1,6 +1,5 @@
-import { Component } from '@angular/core'
+import { Component } from '@angular/core';
 
-import { StarWarsTopic } from "./main/services/star-wars.service";
 
 @Component({
   selector: 'app-root',
@@ -8,9 +7,4 @@ import { StarWarsTopic } from "./main/services/star-wars.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  topics: StarWarsTopic[] = [
-    StarWarsTopic.People,
-    StarWarsTopic.Planets,
-    StarWarsTopic.Starships
-  ]
 }

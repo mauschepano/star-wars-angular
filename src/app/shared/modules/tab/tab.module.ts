@@ -1,14 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TabConfigComponent } from './tab-config.component';
+import { RouterLink } from "@angular/router";
+import { TabComponent } from "./components/tab/tab.component";
 
 
 @NgModule({
   declarations: [
-    TabConfigComponent
+    TabConfigComponent,
+    TabComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterLink
   ],
   exports: [
     TabConfigComponent

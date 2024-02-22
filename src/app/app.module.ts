@@ -14,6 +14,7 @@ import { PeopleComponent } from "./main/main-detail/people/people.component";
 import { PlanetComponent } from "./main/main-detail/planet/planet.component";
 import { StarshipComponent } from "./main/main-detail/starship/starship.component";
 import { TabModule } from "./shared/modules/tab/tab.module";
+import { TabConfigComponent } from "./shared/modules/tab/tab-config.component";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,9 @@ import { TabModule } from "./shared/modules/tab/tab.module";
     TabModule
   ],
   providers: [],
+  exports: [
+    TabConfigComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

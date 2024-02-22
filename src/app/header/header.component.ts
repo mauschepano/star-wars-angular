@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 import { StarWarsTopic } from "../main/services/star-wars.service";
 
 @Component({
@@ -7,9 +7,13 @@ import { StarWarsTopic } from "../main/services/star-wars.service";
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  @Input() topics: StarWarsTopic[]
+  @Input() topics: StarWarsTopic[];
+  @Output() tabClicked: EventEmitter<string> = new EventEmitter();
 
-  constructor() {
+  constructor() {}
+
+
+  public handleTabClicked(value: string) {
+    this.tabClicked.emit(value);
   }
-
 }
